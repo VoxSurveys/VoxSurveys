@@ -3,43 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Monthly Survey Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f0f2f5;
+      background: linear-gradient(135deg, #f8fbff, #e3f2fd);
     }
 
     .topbar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 60px;
-      background-color: #2d3436;
+      background: linear-gradient(90deg, #1e3c72, #2a5298);
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 30px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       z-index: 1000;
     }
 
     .topbar a {
-      color: #00cec9;
+      color: #ffd700;
       text-decoration: none;
       margin-left: 20px;
-      cursor: pointer;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .topbar a:hover {
+      color: #ffffff;
     }
 
     .container {
-      margin-top: 80px;
+      margin-top: 90px;
       padding: 20px;
       max-width: 1200px;
       margin-left: auto;
@@ -53,56 +57,68 @@
     }
 
     .day-card {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 15px;
-      transition: transform 0.2s ease;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       cursor: pointer;
     }
 
     .day-card:hover {
-      transform: scale(1.02);
+      transform: scale(1.03);
+      background: rgba(255, 255, 255, 0.95);
     }
 
     .date-title {
-      font-weight: bold;
-      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 16px;
       color: #2d3436;
+      margin-bottom: 12px;
     }
 
     .survey-links {
       display: none;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .link-btn {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #dfe6e9;
-      padding: 8px 10px;
-      margin: 5px 0;
-      border-radius: 5px;
+      background-color: #f1f2f6;
+      padding: 10px 12px;
+      margin: 6px 0;
+      border-radius: 6px;
       font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .link-btn:hover {
+      background-color: #dfe6e9;
     }
 
     .link-btn.completed {
-      background-color: #a0e8a0;
+      background-color: #c8e6c9;
       text-decoration: line-through;
     }
 
     .link-btn button {
-      background-color: #0984e3;
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
       color: white;
       border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 6px 14px;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 13px;
+      transition: background 0.3s ease;
     }
 
     .link-btn button:disabled {
-      background-color: #636e72;
+      background-color: #b2bec3;
+      cursor: default;
     }
 
     /* Login Popup */
@@ -119,26 +135,29 @@
 
     #loginPopup div {
       background: white;
-      padding: 25px 30px;
-      border-radius: 10px;
+      padding: 30px;
+      border-radius: 12px;
       text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     #loginPopup input {
-      padding: 10px;
+      padding: 12px;
       width: 100%;
-      margin: 10px 0;
+      margin: 12px 0;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     #loginPopup button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       background: #0984e3;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 15px;
     }
   </style>
 </head>
@@ -179,9 +198,6 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const completedKey = `completed-surveys-${year}-${month}`;
 
-    // ---------------------------
-    // USER LOGIN / LOGOUT
-    // ---------------------------
     let userName = localStorage.getItem("username");
 
     function saveUsername() {
@@ -207,9 +223,6 @@
       document.getElementById("usernameDisplay").innerText = `Name: ${userName}`;
     }
 
-    // ---------------------------
-    // Completed Survey Storage
-    // ---------------------------
     let completedSurveys = JSON.parse(localStorage.getItem(completedKey)) || {};
 
     function saveCompleted(day, index) {
@@ -232,9 +245,6 @@
       return links;
     }
 
-    // ---------------------------
-    // Generate Calendar
-    // ---------------------------
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dateStr = date.toDateString();
@@ -260,7 +270,6 @@
         const button = document.createElement("button");
         button.innerText = "Open";
 
-        // If completed already
         if (completedSurveys[day] && completedSurveys[day].includes(index)) {
           row.classList.add("completed");
           button.innerText = "Completed";
@@ -268,7 +277,7 @@
         }
 
         button.onclick = (e) => {
-          e.stopPropagation(); // Prevent dropdown toggle
+          e.stopPropagation();
           window.open(link.url, "_blank");
           button.innerText = "Completed";
           button.disabled = true;
@@ -283,8 +292,6 @@
 
       card.appendChild(dateTitle);
       card.appendChild(linksContainer);
-
-      // Toggle dropdown
       card.addEventListener("click", () => {
         linksContainer.style.display = linksContainer.style.display === "block" ? "none" : "block";
       });
