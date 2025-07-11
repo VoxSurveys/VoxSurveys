@@ -1,249 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Survey Tracker</title>
+  <meta charset="UTF-8">
+  <title>Monthly Survey Tracker</title>
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+    }
 
     .topbar {
-      background: #2d3436; color: white; padding: 15px 30px;
-      display: flex; justify-content: space-between; align-items: center;
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #2d3436;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1000;
     }
-    .topbar a { color: #00cec9; margin-left: 15px; text-decoration: none; cursor: pointer; }
 
-    .container { padding: 100px 20px 20px; max-width: 1200px; margin: auto; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .topbar a {
+      color: #00cec9;
+      text-decoration: none;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    .container {
+      margin-top: 80px;
+      padding: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
 
     .day-card {
-      background: white; padding: 15px; border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
-    .day-card:hover { background: #ecf0f1; }
-    .date-title { font-weight: bold; margin-bottom: 10px; }
+    .day-card:hover {
+      transform: scale(1.02);
+    }
 
-    .survey-links { display: none; margin-top: 10px; }
+    .date-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2d3436;
+    }
+
+    .survey-links {
+      display: none;
+      margin-top: 10px;
+    }
+
     .link-btn {
-      background: #dfe6e9; padding: 8px 10px; border-radius: 5px;
-      display: flex; justify-content: space-between; margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #dfe6e9;
+      padding: 8px 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      font-size: 14px;
     }
-    .link-btn.completed { background: #a0e8a0; text-decoration: line-through; }
+
+    .link-btn.completed {
+      background-color: #a0e8a0;
+      text-decoration: line-through;
+    }
 
     .link-btn button {
-      background: #0984e3; color: white; border: none;
-      padding: 5px 10px; border-radius: 5px; cursor: pointer;
+      background-color: #0984e3;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
-    .link-btn button:disabled { background: #636e72; }
-
-    #loginPopup, #adminPanel {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000000cc; display: none; justify-content: center; align-items: center; z-index: 2000;
+    .link-btn button:disabled {
+      background-color: #636e72;
     }
 
-    #loginPopup div, #adminPanel div {
-      background: white; padding: 25px; border-radius: 10px; text-align: center;
-      width: 300px;
+    /* Login Popup */
+    #loginPopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000000cc;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
     }
 
-    input, button { font-size: 16px; margin: 8px 0; }
-
-    .progress-bar-container {
-      background: #ccc; border-radius: 20px; height: 24px; overflow: hidden;
-      margin-bottom: 20px;
+    #loginPopup div {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 10px;
+      text-align: center;
     }
 
-    .progress-bar-fill {
-      height: 100%; background: #27ae60; width: 0%;
-      text-align: center; color: white; line-height: 24px;
+    #loginPopup input {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    #loginPopup button {
+      padding: 10px 20px;
+      background: #0984e3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div><strong id="usernameDisplay">Name:</strong> <span id="username">Guest</span></div>
-  <div>
-    <strong>Balance:</strong> ₹150
-    <a onclick="logout()">Logout</a>
-    <a onclick="openAdmin()">Admin</a>
-  </div>
-</div>
-
-<!-- Login Popup -->
-<div id="loginPopup">
-  <div>
-    <h3>Enter your name</h3>
-    <input id="usernameInput" placeholder="Your name" />
-    <br><button onclick="saveUsername()">Start</button>
-  </div>
-</div>
-
-<!-- Admin Panel -->
-<div id="adminPanel">
-  <div>
-    <h3>Admin Access</h3>
-    <div id="adminLogin">
-      <input type="password" id="adminPassword" placeholder="Enter Admin Password" />
-      <br><button onclick="checkAdmin()">Login</button>
-    </div>
-    <div id="adminTools" style="display:none;">
-      <input type="file" id="csvFile" accept=".csv" onchange="loadCSV(event)" />
-      <p style="font-size:13px;">CSV format: Date,Survey Name,URL</p>
-      <button onclick="closeAdmin()">Close</button>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div><strong id="usernameDisplay">Name: Guest</strong></div>
+    <div>
+      <strong>Balance:</strong> ₹150
+      <a onclick="logout()">Logout</a>
+      <a href="#">Settings</a>
     </div>
   </div>
-</div>
 
-<!-- Main Container -->
-<div class="container">
-  <div class="progress-bar-container">
-    <div class="progress-bar-fill" id="progressBar">0%</div>
+  <!-- Login Popup -->
+  <div id="loginPopup">
+    <div>
+      <h3>Enter your name</h3>
+      <input type="text" id="usernameInput" placeholder="Your name" />
+      <br>
+      <button onclick="saveUsername()">Start</button>
+    </div>
   </div>
-  <div class="grid" id="calendarGrid"></div>
-</div>
 
-<script>
-  const calendarGrid = document.getElementById("calendarGrid");
-  const progressBar = document.getElementById("progressBar");
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const completedKey = `completed-surveys-${year}-${month}`;
-  const surveyDataKey = `survey-data-${year}-${month}`;
-  let completedSurveys = JSON.parse(localStorage.getItem(completedKey)) || {};
-  let surveyMap = JSON.parse(localStorage.getItem(surveyDataKey)) || {};
+  <!-- Main Content -->
+  <div class="container">
+    <div class="grid" id="calendarGrid">
+      <!-- Date cards will be inserted here -->
+    </div>
+  </div>
 
-  let userName = localStorage.getItem("username");
-  function saveUsername() {
-    const input = document.getElementById("usernameInput").value.trim();
-    if (input) {
-      localStorage.setItem("username", input);
-      document.getElementById("username").innerText = input;
-      document.getElementById("loginPopup").style.display = "none";
-    }
-  }
-  function logout() {
-    if (confirm("Logout?")) {
-      localStorage.removeItem("username");
-      location.reload();
-    }
-  }
+  <script>
+    const calendarGrid = document.getElementById("calendarGrid");
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0 = Jan
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const completedKey = `completed-surveys-${year}-${month}`;
 
-  if (!userName) document.getElementById("loginPopup").style.display = "flex";
-  else document.getElementById("username").innerText = userName;
+    // ---------------------------
+    // USER LOGIN / LOGOUT
+    // ---------------------------
+    let userName = localStorage.getItem("username");
 
-  function openAdmin() {
-    document.getElementById("adminPanel").style.display = "flex";
-  }
-  function closeAdmin() {
-    document.getElementById("adminPanel").style.display = "none";
-  }
-  function checkAdmin() {
-    const pass = document.getElementById("adminPassword").value;
-    if (pass === "admin123") {
-      document.getElementById("adminLogin").style.display = "none";
-      document.getElementById("adminTools").style.display = "block";
-    } else {
-      alert("Incorrect password");
-    }
-  }
-
-  function loadCSV(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const lines = evt.target.result.split("\n");
-      surveyMap = {};
-      for (let line of lines) {
-        const [date, name, url] = line.trim().split(",");
-        if (!date || !name || !url) continue;
-        if (!surveyMap[date]) surveyMap[date] = [];
-        surveyMap[date].push({ name: name.trim(), url: url.trim() });
+    function saveUsername() {
+      const input = document.getElementById("usernameInput");
+      const name = input.value.trim();
+      if (name) {
+        localStorage.setItem("username", name);
+        document.getElementById("loginPopup").style.display = "none";
+        document.getElementById("usernameDisplay").innerText = `Name: ${name}`;
       }
-      localStorage.setItem(surveyDataKey, JSON.stringify(surveyMap));
-      alert("Surveys loaded!");
-      location.reload();
-    };
-    reader.readAsText(file);
-  }
-
-  function saveCompleted(date, index) {
-    if (!completedSurveys[date]) completedSurveys[date] = [];
-    if (!completedSurveys[date].includes(index)) {
-      completedSurveys[date].push(index);
-      localStorage.setItem(completedKey, JSON.stringify(completedSurveys));
-      updateProgress();
     }
-  }
 
-  function updateProgress() {
-    let total = 0, done = 0;
-    for (let date in surveyMap) {
-      total += surveyMap[date].length;
-      if (completedSurveys[date]) done += completedSurveys[date].length;
+    function logout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("username");
+        location.reload();
+      }
     }
-    let percent = total ? Math.round((done / total) * 100) : 0;
-    progressBar.style.width = percent + "%";
-    progressBar.innerText = percent + "%";
-  }
 
-  function renderCalendar() {
-    for (let dateStr in surveyMap) {
-      const dateObj = new Date(dateStr);
+    if (!userName) {
+      document.getElementById("loginPopup").style.display = "flex";
+    } else {
+      document.getElementById("usernameDisplay").innerText = `Name: ${userName}`;
+    }
+
+    // ---------------------------
+    // Completed Survey Storage
+    // ---------------------------
+    let completedSurveys = JSON.parse(localStorage.getItem(completedKey)) || {};
+
+    function saveCompleted(day, index) {
+      if (!completedSurveys[day]) completedSurveys[day] = [];
+      if (!completedSurveys[day].includes(index)) {
+        completedSurveys[day].push(index);
+        localStorage.setItem(completedKey, JSON.stringify(completedSurveys));
+      }
+    }
+
+    function generateLinks(day) {
+      const count = Math.floor(Math.random() * 5) + 1;
+      const links = [];
+      for (let i = 1; i <= count; i++) {
+        links.push({
+          name: `Survey ${i}`,
+          url: `https://example.com/survey-${day}-${i}`
+        });
+      }
+      return links;
+    }
+
+    // ---------------------------
+    // Generate Calendar
+    // ---------------------------
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dateStr = date.toDateString();
+
       const card = document.createElement("div");
       card.className = "day-card";
-      const title = document.createElement("div");
-      title.className = "date-title";
-      title.innerText = dateObj.toDateString();
+
+      const dateTitle = document.createElement("div");
+      dateTitle.className = "date-title";
+      dateTitle.innerText = dateStr;
+
       const linksContainer = document.createElement("div");
       linksContainer.className = "survey-links";
 
-      surveyMap[dateStr].forEach((s, i) => {
+      const links = generateLinks(day);
+      links.forEach((link, index) => {
         const row = document.createElement("div");
         row.className = "link-btn";
-        const span = document.createElement("span");
-        span.innerText = s.name;
-        const btn = document.createElement("button");
-        btn.innerText = "Open";
 
-        if (completedSurveys[dateStr] && completedSurveys[dateStr].includes(i)) {
+        const span = document.createElement("span");
+        span.innerText = link.name;
+
+        const button = document.createElement("button");
+        button.innerText = "Open";
+
+        // If completed already
+        if (completedSurveys[day] && completedSurveys[day].includes(index)) {
           row.classList.add("completed");
-          btn.innerText = "Completed";
-          btn.disabled = true;
+          button.innerText = "Completed";
+          button.disabled = true;
         }
 
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          window.open(s.url, "_blank");
-          btn.innerText = "Completed";
-          btn.disabled = true;
+        button.onclick = (e) => {
+          e.stopPropagation(); // Prevent dropdown toggle
+          window.open(link.url, "_blank");
+          button.innerText = "Completed";
+          button.disabled = true;
           row.classList.add("completed");
-          saveCompleted(dateStr, i);
+          saveCompleted(day, index);
         };
 
-        row.append(span);
-        row.append(btn);
-        linksContainer.append(row);
+        row.appendChild(span);
+        row.appendChild(button);
+        linksContainer.appendChild(row);
       });
 
-      card.appendChild(title);
+      card.appendChild(dateTitle);
       card.appendChild(linksContainer);
-      card.onclick = () => {
+
+      // Toggle dropdown
+      card.addEventListener("click", () => {
         linksContainer.style.display = linksContainer.style.display === "block" ? "none" : "block";
-      };
+      });
 
       calendarGrid.appendChild(card);
     }
+  </script>
 
-    updateProgress();
-  }
-
-  renderCalendar();
-</script>
 </body>
 </html>
