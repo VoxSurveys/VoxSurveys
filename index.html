@@ -14,7 +14,7 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(-45deg, #e0f7fa, #fce4ec, #f3e5f5, #e8f5e9);
+      background: linear-gradient(-45deg, #f0f4f8, #e9ecef, #dee2e6, #f8f9fa);
       background-size: 400% 400%;
       animation: gradientShift 15s ease infinite;
     }
@@ -30,58 +30,70 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 60px;
-      background: linear-gradient(90deg, #1e3c72, #2a5298);
+      height: 65px;
+      background-color: #1e272e;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 30px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       z-index: 1000;
     }
 
+    .topbar div,
     .topbar a {
-      color: #ffd700;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: bold;
-      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
     }
 
-    .topbar a:hover {
+    .topbar a {
+      color: #00cec9;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 600;
+    }
+
+    .balance-section {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .balance-display {
+      background-color: #2d3436;
+      color: transparent;
+      border-radius: 5px;
+      padding: 6px 12px;
+      font-weight: bold;
+      font-size: 15px;
+      position: relative;
+      margin: 0 20px;
+    }
+
+    .balance-display:hover {
       color: #ffffff;
     }
 
-    .balance-hover {
-      position: relative;
-      display: inline-block;
-    }
-
-    .balance-hover .hidden-balance {
-      color: transparent;
-      background-color: #ffd700;
-      border-radius: 6px;
-      padding: 4px 8px;
-    }
-
-    .balance-hover .hover-text {
+    .balance-tooltip {
       visibility: hidden;
-      background-color: #2d3436;
+      background-color: #222;
       color: #fff;
       text-align: center;
       padding: 6px 10px;
       border-radius: 6px;
       position: absolute;
-      z-index: 1;
-      bottom: 125%;
-      left: 0;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
       opacity: 0;
       transition: opacity 0.3s;
+      font-size: 13px;
       white-space: nowrap;
     }
 
-    .balance-hover:hover .hover-text {
+    .balance-section:hover .balance-tooltip {
       visibility: visible;
       opacity: 1;
     }
@@ -101,67 +113,58 @@
     }
 
     .day-card {
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 15px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      padding: 20px;
-      transition: transform 0.3s ease, background 0.3s ease;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 16px;
+      transition: transform 0.2s ease;
       cursor: pointer;
     }
 
     .day-card:hover {
-      transform: scale(1.03);
-      background: rgba(255, 255, 255, 0.95);
+      transform: scale(1.02);
     }
 
     .date-title {
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: bold;
+      font-size: 15px;
       color: #2d3436;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .survey-links {
       display: none;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .link-btn {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #f1f2f6;
-      padding: 10px 12px;
-      margin: 6px 0;
+      background-color: #ecf0f1;
+      padding: 8px 10px;
+      margin: 5px 0;
       border-radius: 6px;
       font-size: 14px;
-      transition: background 0.3s ease;
-    }
-
-    .link-btn:hover {
-      background-color: #dfe6e9;
     }
 
     .link-btn.completed {
-      background-color: #c8e6c9;
+      background-color: #a0e8a0;
       text-decoration: line-through;
     }
 
     .link-btn button {
-      background: linear-gradient(135deg, #74b9ff, #0984e3);
+      background-color: #0984e3;
       color: white;
       border: none;
-      padding: 6px 14px;
-      border-radius: 5px;
+      padding: 5px 10px;
+      border-radius: 4px;
       cursor: pointer;
       font-size: 13px;
-      transition: background 0.3s ease;
     }
 
     .link-btn button:disabled {
-      background-color: #b2bec3;
+      background-color: #636e72;
       cursor: default;
     }
 
@@ -211,9 +214,9 @@
   <!-- Top Bar -->
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
-    <div class="balance-hover">
-      <span class="hidden-balance">₹•••</span>
-      <span class="hover-text">End of the month balance will be shown!</span>
+    <div class="balance-section">
+      <div class="balance-display">₹•••</div>
+      <div class="balance-tooltip">End of the month balance will be shown!</div>
       <a onclick="logout()">Logout</a>
       <a href="#">Settings</a>
     </div>
@@ -237,7 +240,7 @@
   <script>
     const calendarGrid = document.getElementById("calendarGrid");
     const year = new Date().getFullYear();
-    const month = 6; // July (0-based)
+    const month = 6; // July (0-indexed)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const completedKey = `completed-surveys-${year}-${month}`;
     let userName = localStorage.getItem("username");
