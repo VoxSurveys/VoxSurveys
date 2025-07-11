@@ -3,26 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Monthly Survey Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
-      cursor: url('https://cur.cursors-4u.net/others/oth-8/oth756.cur'), auto;
+      cursor: pointer;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(-45deg, #f0f4f8, #e9ecef, #dee2e6, #f8f9fa);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      background: #f0f4f8;
     }
 
     .topbar {
@@ -262,7 +255,6 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
     <div class="balance-section">
@@ -276,7 +268,6 @@
     </div>
   </div>
 
-  <!-- Login Popup -->
   <div id="loginPopup">
     <div>
       <h3>Enter your name</h3>
@@ -286,7 +277,6 @@
     </div>
   </div>
 
-  <!-- Alert Modal -->
   <div id="alertModal">
     <div class="modal-content">
       <h4>⚠ Pending Surveys</h4>
@@ -295,12 +285,11 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="container">
     <div class="grid" id="calendarGrid"></div>
   </div>
 
-  <script>
+  <script defer>
     const calendarGrid = document.getElementById("calendarGrid");
     const alertModal = document.getElementById("alertModal");
     const year = new Date().getFullYear();
@@ -344,10 +333,12 @@
 
     function generateLinks(day) {
       const customLinks = {
-        1: [{ name: "Fun & Random Questions to Know You Better", url: "https://docs.google.com/forms/d/16gC6TfSJCxJTjHEjvvVsD2H3fogPwW9Gr8rKx0ljt9A/edit" },
-            { name: "Relationships & Social Life Survey", url: "https://docs.google.com/forms/d/1Qcqnvdy2sfd5xBa1loTrFN1SRnBIa_oMmQnWuzoWTNQ/edit" }],
+        1: [
+          { name: "Fun & Random Questions to Know You Better", url: "https://docs.google.com/forms/d/16gC6TfSJCxJTjHEjvvVsD2H3fogPwW9Gr8rKx0ljt9A/edit" },
+          { name: "Relationships & Social Life Survey", url: "https://docs.google.com/forms/d/1Qcqnvdy2sfd5xBa1loTrFN1SRnBIa_oMmQnWuzoWTNQ/edit" }
+        ],
         2: [{ name: "Home & Living Environment Survey", url: "https://docs.google.com/forms/d/1gIP_e54wvGBDBLH7C3fCVICWbRH_K0H5mKlgtNQOQVU/edit" }],
-        3: [{ name: "Health & Lifestyle Awareness Survey url: "#" }],
+        3: [{ name: "Health & Lifestyle Awareness Survey", url: "#" }],
         4: [{ name: "Health & Lifestyle Awareness Survey", url: "https://docs.google.com/forms/d/1AlTAcrpvLAklwP2yfONZmqcE0AO8DbwQ8KSvl-O5ktA/edit" }],
         5: [{ name: "Exercise Frequency and Fitness Habits Survey", url: "https://docs.google.com/forms/d/1gvftw9m8pnl7NlyVArfTS2kLISoYsG29sYtZy7HmRbs/edit" }],
         6: [{ name: "Cooking Habits & Preferences Survey", url: "https://docs.google.com/forms/u/1/d/1zxB-GMR_fQ49zZrf9TI3JuHrq22b8P--g2Amfpl6PdU/edit" }]
@@ -437,6 +428,5 @@
       calendarGrid.appendChild(card);
     }
   </script>
-
 </body>
 </html>
