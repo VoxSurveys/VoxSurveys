@@ -5,9 +5,7 @@
   <title>Monthly Survey Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Poppins', sans-serif;
@@ -121,7 +119,6 @@
       cursor: default;
     }
 
-    /* Login Popup */
     #loginPopup {
       position: fixed;
       top: 0; left: 0;
@@ -163,7 +160,6 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
     <div>
@@ -173,7 +169,6 @@
     </div>
   </div>
 
-  <!-- Login Popup -->
   <div id="loginPopup">
     <div>
       <h3>Enter your name</h3>
@@ -183,21 +178,17 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="container">
-    <div class="grid" id="calendarGrid">
-      <!-- Date cards will be inserted here -->
-    </div>
+    <div class="grid" id="calendarGrid"></div>
   </div>
 
   <script>
     const calendarGrid = document.getElementById("calendarGrid");
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth(); // 0 = Jan
+    const month = 6; // July (0-based index)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const completedKey = `completed-surveys-${year}-${month}`;
-
     let userName = localStorage.getItem("username");
 
     function saveUsername() {
@@ -234,15 +225,20 @@
     }
 
     function generateLinks(day) {
-      const count = Math.floor(Math.random() * 5) + 1;
-      const links = [];
-      for (let i = 1; i <= count; i++) {
-        links.push({
-          name: `Survey ${i}`,
-          url: `https://example.com/survey-${day}-${i}`
-        });
-      }
-      return links;
+      const customLinks = {
+        1: [
+          { name: "Bing", url: "https://bing.com" },
+          { name: "Google", url: "https://google.com" }
+        ],
+        2: [
+          { name: "Evil Site", url: "https://evil.com" }
+        ],
+        3: [
+          { name: "Attacker Site", url: "https://attacker.com" }
+        ]
+      };
+
+      return customLinks[day] || [];
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
