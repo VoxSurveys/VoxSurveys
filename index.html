@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Survey Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 70px;
+      background-color: #f4f4f4;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .survey-container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .date-row {
+      background: white;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .date-row:hover {
+      background-color: #eef6ff;
+    }
+
+    .survey-links {
+      display: none;
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .link-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0;
+      background-color: #f9f9f9;
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    .completed {
+      background-color: #e0ffe0 !important;
+      text-decoration: line-through;
+    }
+
+    button {
+      padding: 6px 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div><strong>Name:</strong> Ratnadip</div>
+    <div>
+      <strong>Balance:</strong> ₹150 &nbsp;&nbsp;
+      <a href="#" style="color:white; text-decoration: underline;">Settings</a>
+    </div>
+  </div>
+
+  <div class="survey-container" id="surveyContainer">
+    <!-- Dates and Surveys will be inserted here -->
+  </div>
+
+  <script>
+    const surveyContainer = document.getElementById('surveyContainer');
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0-indexed
+
+    // Get number of days in the current month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Generate fake survey links
+    function generateSurveyLinks(day) {
+      const numLinks = Math.floor(Math.random() * 5) + 1; // 1 to 5
+      const links = [];
+
+      for (let i = 1; i <= numLinks; i++) {
+        links.push({
+          label: `Survey ${i}`,
+          url: `https://example.com/survey-${day}-${i}`
+        });
+      }
+
+      return links;
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = new Date(year, month, day).toDateString();
+
+      const dateRow = document.createElement('div');
+      dateRow.className = 'date-row';
+      dateRow.innerHTML = `<strong>${dateStr}</strong>`;
+
+      const linksDiv = document.createElement('div');
+      linksDiv.className = 'survey-links';
+      const surveyLinks = generateSurveyLinks(day);
+
+      surveyLinks.forEach((link, index) => {
+        const linkItem = document.createElement('div');
+        linkItem.className = 'link-item';
+        linkItem.innerHTML = `
+          <span>${link.label}</span>
+          <button onclick="handleSurveyClick(this, '${link.url}')">Open</button>
+        `;
+        linksDiv.appendChild(linkItem);
+      });
+
+      dateRow.addEventListener('click', () => {
+        linksDiv.style.display = linksDiv.style.display === 'block' ? 'none' : 'block';
+      });
+
+      surveyContainer.appendChild(dateRow);
+      surveyContainer.appendChild(linksDiv);
+    }
+
+    function handleSurveyClick(button, url) {
+      window.open(url, '_blank');
+      button.innerText = 'Completed';
+      button.disabled = true;
+      button.parentElement.classList.add('completed');
+    }
+  </script>
+
+</body>
+</html>
