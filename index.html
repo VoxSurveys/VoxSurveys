@@ -57,19 +57,25 @@
     .balance-section {
       position: relative;
       display: flex;
-      justify-content: center;
       align-items: center;
+      gap: 15px;
     }
 
     .balance-display {
       background-color: #2d3436;
       color: transparent;
-      border-radius: 5px;
-      padding: 6px 12px;
+      border-radius: 8px;
+      padding: 8px 16px;
       font-weight: bold;
       font-size: 15px;
       position: relative;
-      margin: 0 20px;
+      display: flex;
+      align-items: center;
+      transition: color 0.3s ease;
+    }
+
+    .balance-display img {
+      margin-right: 8px;
     }
 
     .balance-display:hover {
@@ -215,8 +221,11 @@
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
     <div class="balance-section">
-      <div class="balance-display">₹•••</div>
-      <div class="balance-tooltip">End of the month balance will be shown!</div>
+      <div class="balance-display">
+        <img src="https://cdn-icons-png.flaticon.com/512/2920/2920109.png" alt="Wallet" width="20">
+        Balance: ₹•••
+      </div>
+      <div class="balance-tooltip">Your available balance will be shown at the end of the month!</div>
       <a onclick="logout()">Logout</a>
       <a href="#">Settings</a>
     </div>
