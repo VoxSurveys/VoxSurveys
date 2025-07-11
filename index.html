@@ -5,18 +5,31 @@
   <title>Monthly Survey Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      cursor: url('https://cur.cursors-4u.net/others/oth-8/oth756.cur'), auto;
+    }
 
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #f8fbff, #e3f2fd);
+      background: linear-gradient(-45deg, #e0f7fa, #fce4ec, #f3e5f5, #e8f5e9);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .topbar {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 60px;
       background: linear-gradient(90deg, #1e3c72, #2a5298);
       color: white;
@@ -38,6 +51,39 @@
 
     .topbar a:hover {
       color: #ffffff;
+    }
+
+    .balance-hover {
+      position: relative;
+      display: inline-block;
+    }
+
+    .balance-hover .hidden-balance {
+      color: transparent;
+      background-color: #ffd700;
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+
+    .balance-hover .hover-text {
+      visibility: hidden;
+      background-color: #2d3436;
+      color: #fff;
+      text-align: center;
+      padding: 6px 10px;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+
+    .balance-hover:hover .hover-text {
+      visibility: visible;
+      opacity: 1;
     }
 
     .container {
@@ -121,8 +167,10 @@
 
     #loginPopup {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: #000000cc;
       display: none;
       align-items: center;
@@ -160,15 +208,18 @@
 </head>
 <body>
 
+  <!-- Top Bar -->
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
-    <div>
-      <strong>Balance:</strong> ₹150
+    <div class="balance-hover">
+      <span class="hidden-balance">₹•••</span>
+      <span class="hover-text">End of the month balance will be shown!</span>
       <a onclick="logout()">Logout</a>
       <a href="#">Settings</a>
     </div>
   </div>
 
+  <!-- Login Popup -->
   <div id="loginPopup">
     <div>
       <h3>Enter your name</h3>
@@ -178,15 +229,15 @@
     </div>
   </div>
 
+  <!-- Main Content -->
   <div class="container">
     <div class="grid" id="calendarGrid"></div>
   </div>
 
   <script>
     const calendarGrid = document.getElementById("calendarGrid");
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = 6; // July (0-based index)
+    const year = new Date().getFullYear();
+    const month = 6; // July (0-based)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const completedKey = `completed-surveys-${year}-${month}`;
     let userName = localStorage.getItem("username");
@@ -237,7 +288,6 @@
           { name: "Attacker Site", url: "https://attacker.com" }
         ]
       };
-
       return customLinks[day] || [];
     }
 
