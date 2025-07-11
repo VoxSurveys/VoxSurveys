@@ -4,24 +4,17 @@
   <meta charset="UTF-8">
   <title>Monthly Survey Tracker</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f2f5;
+      margin: 0; padding: 0;
+      background-color: #f8f9fa;
     }
-
     .topbar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 60px;
-      background-color: #2d3436;
+      background-color: #2c3e50;
       color: white;
       display: flex;
       justify-content: space-between;
@@ -30,14 +23,12 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       z-index: 1000;
     }
-
     .topbar a {
-      color: #00cec9;
+      color: #1abc9c;
       text-decoration: none;
       margin-left: 20px;
       cursor: pointer;
     }
-
     .container {
       margin-top: 80px;
       padding: 20px;
@@ -45,172 +36,95 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
-
     .day-card {
       background-color: white;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
       transition: transform 0.2s ease;
-      cursor: pointer;
     }
-
     .day-card:hover {
       transform: scale(1.02);
     }
-
     .date-title {
       font-weight: bold;
-      margin-bottom: 10px;
+      font-size: 16px;
       color: #2d3436;
+      margin-bottom: 10px;
     }
-
     .survey-links {
-      display: none;
       margin-top: 10px;
     }
-
     .link-btn {
+      background-color: #ecf0f1;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #dfe6e9;
-      padding: 8px 10px;
-      margin: 5px 0;
-      border-radius: 5px;
-      font-size: 14px;
     }
-
     .link-btn.completed {
-      background-color: #a0e8a0;
+      background-color: #a3e4d7;
       text-decoration: line-through;
     }
-
     .link-btn button {
-      background-color: #0984e3;
+      background-color: #3498db;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 10px;
       border-radius: 4px;
       cursor: pointer;
     }
-
-    .link-btn button:disabled {
-      background-color: #636e72;
+    .add-link-form {
+      display: flex;
+      margin-top: 10px;
     }
-
-    /* Login Popup */
-    #loginPopup {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #000000cc;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
+    .add-link-form input {
+      flex: 1;
+      padding: 8px;
+      margin-right: 5px;
+      font-size: 14px;
     }
-
-    #loginPopup div {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    #loginPopup input {
-      padding: 10px;
-      width: 100%;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-
-    #loginPopup button {
-      padding: 10px 20px;
-      background: #0984e3;
+    .add-link-form button {
+      background-color: #27ae60;
       color: white;
       border: none;
-      border-radius: 5px;
+      padding: 8px 12px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 15px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Top Bar -->
   <div class="topbar">
     <div><strong id="usernameDisplay">Name: Guest</strong></div>
     <div>
       <strong>Balance:</strong> ₹150
       <a onclick="logout()">Logout</a>
-      <a href="#">Settings</a>
     </div>
   </div>
 
-  <!-- Login Popup -->
-  <div id="loginPopup">
-    <div>
-      <h3>Enter your name</h3>
-      <input type="text" id="usernameInput" placeholder="Your name" />
-      <br>
-      <button onclick="saveUsername()">Start</button>
-    </div>
-  </div>
-
-  <!-- Main Content -->
   <div class="container">
-    <div class="grid" id="calendarGrid">
-      <!-- Date cards will be inserted here -->
-    </div>
+    <div class="grid" id="calendarGrid"></div>
   </div>
 
   <script>
     const calendarGrid = document.getElementById("calendarGrid");
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth(); // 0 = Jan
+    const month = today.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const completedKey = `completed-surveys-${year}-${month}`;
+    const surveyLinkKey = `custom-survey-links-${year}-${month}`;
 
-    // ---------------------------
-    // USER LOGIN / LOGOUT
-    // ---------------------------
-    let userName = localStorage.getItem("username");
-
-    function saveUsername() {
-      const input = document.getElementById("usernameInput");
-      const name = input.value.trim();
-      if (name) {
-        localStorage.setItem("username", name);
-        document.getElementById("loginPopup").style.display = "none";
-        document.getElementById("usernameDisplay").innerText = `Name: ${name}`;
-      }
-    }
-
-    function logout() {
-      if (confirm("Are you sure you want to logout?")) {
-        localStorage.removeItem("username");
-        location.reload();
-      }
-    }
-
-    if (!userName) {
-      document.getElementById("loginPopup").style.display = "flex";
-    } else {
-      document.getElementById("usernameDisplay").innerText = `Name: ${userName}`;
-    }
-
-    // ---------------------------
-    // Completed Survey Storage
-    // ---------------------------
     let completedSurveys = JSON.parse(localStorage.getItem(completedKey)) || {};
+    let customSurveyLinks = JSON.parse(localStorage.getItem(surveyLinkKey)) || {};
 
     function saveCompleted(day, index) {
       if (!completedSurveys[day]) completedSurveys[day] = [];
@@ -220,21 +134,13 @@
       }
     }
 
-    function generateLinks(day) {
-      const count = Math.floor(Math.random() * 5) + 1;
-      const links = [];
-      for (let i = 1; i <= count; i++) {
-        links.push({
-          name: `Survey ${i}`,
-          url: `https://example.com/survey-${day}-${i}`
-        });
-      }
-      return links;
+    function saveSurveyLink(day, name, url) {
+      if (!customSurveyLinks[day]) customSurveyLinks[day] = [];
+      customSurveyLinks[day].push({ name, url });
+      localStorage.setItem(surveyLinkKey, JSON.stringify(customSurveyLinks));
+      location.reload();
     }
 
-    // ---------------------------
-    // Generate Calendar
-    // ---------------------------
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dateStr = date.toDateString();
@@ -249,7 +155,7 @@
       const linksContainer = document.createElement("div");
       linksContainer.className = "survey-links";
 
-      const links = generateLinks(day);
+      const links = customSurveyLinks[day] || [];
       links.forEach((link, index) => {
         const row = document.createElement("div");
         row.className = "link-btn";
@@ -260,7 +166,6 @@
         const button = document.createElement("button");
         button.innerText = "Open";
 
-        // If completed already
         if (completedSurveys[day] && completedSurveys[day].includes(index)) {
           row.classList.add("completed");
           button.innerText = "Completed";
@@ -268,7 +173,7 @@
         }
 
         button.onclick = (e) => {
-          e.stopPropagation(); // Prevent dropdown toggle
+          e.stopPropagation();
           window.open(link.url, "_blank");
           button.innerText = "Completed";
           button.disabled = true;
@@ -281,17 +186,49 @@
         linksContainer.appendChild(row);
       });
 
+      // Add input form
+      const inputForm = document.createElement("div");
+      inputForm.className = "add-link-form";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "Survey Name | URL (comma separated)";
+
+      const addBtn = document.createElement("button");
+      addBtn.innerText = "Add";
+
+      addBtn.onclick = () => {
+        const value = input.value.trim();
+        if (value.includes(",")) {
+          const [name, url] = value.split(",").map(v => v.trim());
+          if (name && url) saveSurveyLink(day, name, url);
+        } else {
+          alert("Please enter as: Name, URL");
+        }
+      };
+
+      inputForm.appendChild(input);
+      inputForm.appendChild(addBtn);
+
       card.appendChild(dateTitle);
       card.appendChild(linksContainer);
-
-      // Toggle dropdown
-      card.addEventListener("click", () => {
-        linksContainer.style.display = linksContainer.style.display === "block" ? "none" : "block";
-      });
+      card.appendChild(inputForm);
 
       calendarGrid.appendChild(card);
     }
-  </script>
 
+    // Username logic
+    const storedName = localStorage.getItem("username");
+    if (storedName) {
+      document.getElementById("usernameDisplay").innerText = `Name: ${storedName}`;
+    }
+
+    function logout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("username");
+        location.reload();
+      }
+    }
+  </script>
 </body>
 </html>
